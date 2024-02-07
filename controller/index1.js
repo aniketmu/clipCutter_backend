@@ -3,7 +3,7 @@ import ffmpeg from "fluent-ffmpeg";
 import dotenv from "dotenv";
 import aws from "aws-sdk"
 import fs from "fs"
-
+import Video from "../database/mongo_schema_video.js"
 dotenv.config()
 
 aws.config.update({
@@ -44,6 +44,12 @@ export async function createVideoClip(
     // Once the conversion is done, upload the clip to S3
     const data = await uploadClip(outputPath);
 
+    const newVideo = new Video({
+      name: outputPath,
+      location : data
+    })
+
+    await newVideo.save()
     return data
   }
   

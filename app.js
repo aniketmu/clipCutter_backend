@@ -9,6 +9,7 @@ import cors from 'cors';
 import path, { dirname } from 'path';
 import fs from 'fs';
 import { fileURLToPath } from "url";
+import Video from "./database/mongo_schema_video.js"
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 console.log(__dirname)
@@ -24,7 +25,7 @@ app.use(
         tempFileDir: '/video/'
     })
 )
-// mongodb();
+mongodb();
 
 app.post('/api/register', Register);
 
@@ -62,6 +63,11 @@ app.get('/video',(req,res)=>{
         res.writeHead(200, head);
         fs.createReadStream(videoPath).pipe(res);
     }
+})
+
+app.get("/get-video", async(req, res) => {
+    const data = await Video.find()
+    res.status(200).json({data})
 })
 
 export default app;
